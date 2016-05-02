@@ -43,7 +43,7 @@
     "apiVersion": "2015-06-15",
     "imagePublisher": "RedHat",
     "imageOffer": "RHEL",
-    "centOSVersion": "7.2",
+    "rhelOSVersion": "7.2",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
 
   },
@@ -114,7 +114,7 @@
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
-            "sku": "[variables('centOSVersion')]",
+            "sku": "[variables('rhelOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
