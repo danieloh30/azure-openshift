@@ -6,13 +6,39 @@ HOSTNAME=$3
 NODECOUNT=$4
 ROUTEREXTIP=$5
 
-#yum -y update
-yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
-yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
-sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
-yum -y --enablerepo=epel install ansible1.9 pyOpenSSL
-git clone https://github.com/openshift/openshift-ansible /opt/openshift-ansible
-yum -y install docker
+
+# for Subscription Manager
+RHSM_USERNAME=$6
+RHSM_PASSWD=$7
+RHSM_POOLID=$8
+
+#
+# subscribe
+#
+subscription-manager register --username=$RHSM_USERNAME --password=$RHSM_PASSWORD
+subscription-manager attach --pool $RHSM_POOLID
+subscription-manager repos --disable=*
+subscription-manager repos \
+         --enable=rhel-7-server-rpms \
+         --enable=rhel-7-server-extras-rpms \
+         --enable=rhel-7-server-optional-rpms \
+         --enable=rhel-7-server-ose-3.1-rpms
+
+#
+# yum install
+#
+yum update -y
+systemctl disable NetworkManager
+systemctl stop NetworkManager
+yum remove NetworkManager\* -y
+
+
+yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion atomic-openshift-utils docker-1.8.2
+
+
+#
+# config docker
+#
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
                                                                                          
 cat <<EOF > /etc/sysconfig/docker-storage-setup
@@ -24,6 +50,10 @@ docker-storage-setup
 systemctl enable docker
 systemctl start docker
 
+#
+#
+#
+
 
 cat <<EOF > /etc/ansible/hosts
 [OSEv3:children]
@@ -34,7 +64,7 @@ nodes
 ansible_ssh_user=${USERNAME}
 ansible_sudo=true
 debug_level=2
-deployment_type=origin
+deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
@@ -54,9 +84,30 @@ htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook /opt/openshift-ansible/playbooks/byo/config.yml
-oadm registry --selector=region=infra
-oadm router --selector=region=infra
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+
+oadm manage-node master --schedulable=true
+
+htpasswd /etc/origin/master/htpasswd reguser
+
+oadm policy add-role-to-user system:registry reguser
+mkdir -p /registry
+oadm registry \
+    --selector="region=infra" \
+    --config=/etc/origin/master/admin.kubeconfig \
+    --credentials=/etc/origin/master/openshift-registry.kubeconfig \
+    --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' \
+    --replicas=1 \
+    --service-account=registry \
+    --mount-host=/registry
+
+oadm router \
+    --selector="region=infra" \
+    --config=/etc/origin/master/admin.kubeconfig \
+    --credentials=/etc/origin/master/openshift-router.kubeconfig \
+    --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' \
+    --replicas=1 \
+    --service-account=router
 EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh
