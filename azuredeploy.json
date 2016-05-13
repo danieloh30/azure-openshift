@@ -176,6 +176,15 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "redhatUser": {
+            "value": "[parameters('redhatUser')]"
+          },
+          "redhatPassword": {
+            "value": "[parameters('redhatPassword')]"
+          },
+          "redhatPoolId": {
+            "value": "[parameters('redhatPoolId')]"
+          },
           "vmName": {
             "value": "[concat('node', padLeft(add(copyindex(), 1), 2, '0'))]"
           },
@@ -196,15 +205,6 @@
           },
           "baseTemplateUrl": {
             "value": "[variables('baseTemplateUrl')]"
-          },
-          "redhatUser": {
-            "value": "[parameters('redhatUser')]"
-          },
-          "redhatPassword": {
-            "value": "[parameters('redhatPassword')]"
-          },
-          "redhatPoolId": {
-            "value": "[parameters('redhatPoolId')]"
           }
         }
       }
@@ -314,7 +314,7 @@
           },
           "redhatPoolId": {
             "value": "[parameters('redhatPoolId')]"
-          },
+          }
         }
       }
     }
@@ -334,4 +334,3 @@
     }
   }
 }
-
