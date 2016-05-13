@@ -55,7 +55,6 @@
         "description": "Number of Openshift Nodes to deploy (max 30)"
       }
     }
-
   },
   "variables": {
     "baseTemplateUrl": "https://raw.githubusercontent.com/akubicharm/azure-openshift/wip/",
@@ -177,15 +176,6 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "redhatUser": {
-            "value": "[parameters('redhatUser')]"
-          },
-          "redhatPassword": {
-            "value": "[parameters('redhatPassword')]"
-          },
-          "redhatPoolId": {
-            "value": "[parameters('redhatPoolId')]"
-          },
           "vmName": {
             "value": "[concat('node', padLeft(add(copyindex(), 1), 2, '0'))]"
           },
@@ -206,6 +196,15 @@
           },
           "baseTemplateUrl": {
             "value": "[variables('baseTemplateUrl')]"
+          },
+          "redhatUser": {
+            "value": "[parameters('redhatUser')]"
+          },
+          "redhatPassword": {
+            "value": "[parameters('redhatPassword')]"
+          },
+          "redhatPoolId": {
+            "value": "[parameters('redhatPoolId')]"
           }
         }
       }
@@ -286,15 +285,6 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "redhatUser": {
-            "value": "[parameters('redhatUser')]"
-          },
-          "redhatPassword": {
-            "value": "[parameters('redhatPassword')]"
-          },
-          "redhatPoolId": {
-            "value": "[parameters('redhatPoolId')]"
-          },
           "vmName": {
             "value": "infranode"
           },
@@ -315,7 +305,16 @@
           },
           "baseTemplateUrl": {
             "value": "[variables('baseTemplateUrl')]"
-          }
+          },
+          "redhatUser": {
+            "value": "[parameters('redhatUser')]"
+          },
+          "redhatPassword": {
+            "value": "[parameters('redhatPassword')]"
+          },
+          "redhatPoolId": {
+            "value": "[parameters('redhatPoolId')]"
+          },
         }
       }
     }
