@@ -7,7 +7,7 @@ RHSM_POOLID=$3
 
 echo "PARAMETERS"
 echo "RHSM_USERNAME=$RHSM_USERNAME"
-echo "RHSM_PASSWORD=$RHSM_PASSWORD
+echo "RHSM_PASSWORD=$RHSM_PASSWORD"
 echo "RHSM_POOLID=$RHSM_POOLID"
 
 
@@ -37,4 +37,3 @@ EOF
 
 docker-storage-setup                                                                                                                                    
 systemctl enable docker
-
