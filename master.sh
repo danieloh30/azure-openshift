@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 USERNAME=$1
 PASSWORD=$2
@@ -9,8 +10,13 @@ ROUTEREXTIP=$5
 
 # for Subscription Manager
 RHSM_USERNAME=$6
-RHSM_PASSWD=$7
+RHSM_PASSWORD=$7
 RHSM_POOLID=$8
+
+echo "PARAMETERS"
+echo "RHSM_USERNAME=$RHSM_USERNAME"
+echo "RHSM_PASSWORD=$RHSM_PASSWORD"
+echo "RHSM_POOLID=$RHSM_POOLID"
 
 #
 # subscribe
