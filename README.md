@@ -4,6 +4,7 @@
 ### Azure に OpenShift Enterprise をインストールするためのRed Hat Enterprise Linuxサーバ及びネットワーク環境を構築
 「Deploy to Azure」をクリックすると、Azure へのデプロイを開始します。
 「Visualize」をクリックすると、インストールする構成が可視化されます。
+
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fakubicharm%2Fazure-openshift%2Fwip%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
