@@ -73,7 +73,8 @@ debug_level=2
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
-openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
+#openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
+osm_default_subdomain=${ROUTEREXTIP}.xip.io 
 
 [masters]
 master openshift_public_hostname=${HOSTNAME}
@@ -85,19 +86,17 @@ infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
 mkdir -p /etc/origin/master
-htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+sudo htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 
 
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 
-oadm manage-node master --schedulable=true
-
-htpasswd /etc/origin/master/htpasswd reguser
+sudo htpasswd -cb /etc/origin/master/htpasswd joe redhat
 
 oadm policy add-role-to-user system:registry reguser
-mkdir -p /registry
+sudo mkdir -p /registry
 oadm registry \
     --selector="region=infra" \
     --config=/etc/origin/master/admin.kubeconfig \
@@ -114,6 +113,7 @@ oadm router \
     --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' \
     --replicas=1 \
     --service-account=router
+
 EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh
