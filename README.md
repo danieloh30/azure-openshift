@@ -12,6 +12,7 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
+※このテンプレートでは、Core 数削減のためVMサイズはBasic_A2を指定しています。適宜、VMサイズは変更してください。
 
 ## OpenShiftのインストーラ(ansible)を使ってOpenShift Enterpriseをインストール
 
