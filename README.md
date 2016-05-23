@@ -14,18 +14,25 @@
 
 
 ## OpenShiftのインストーラ(ansible)を使ってOpenShift Enterpriseをインストール
-Azureのインスタンスのデプロイ時に作成される、opensift-install.shから ansible の Playbook を実行します。
+
+### 事前準備
+- Ansible の Playbook 実行時に、パスワード入力なしで各サーバーへログインできるように、SSH Key を配置
+- infranode にデプロイする Docker Registry 用の永続化ストレージとして利用するディレクトリの作成と権限の設定
+※Docker RegistryはUID=1001で実行されるので、永続化ストレージとしてNFSのファイルシステムを利用する場合には、chownでディレクトリのオーナーをUID=1001に設定します。
+
+```
+[adminUsername@master]$ ssh infranode
+[adminUsername@master]$ sudo mkdir /registry
+[adminUsername@infranode]$ sudo chown 1001:root /registry
+```
+
+## OpenShift Enterprise のインストールの実施
+
+Azureのインスタンスのデプロイ時にmasterサーバに作成される、openshift-install.sh と hosts ファイル (/etc/ansible/hosts) の定義に従って Ansible の Playbook  ansible の Playbook を実行します。
+
 
 OpenShift Enterpriseのインストーラのパッケージである atomic-openshift-utils に、ansible と OpenShift EnterpriseをインストールするためのAnsible Playbookが含まれています。
 azuredeploy.json ファイルでは、Azure上にデプロイされたRed Hat Enterprise Linuxのホスト名やIPアドレスに基づき Ansible の hosts ファイルを作成して、インストールします。
-
-### Terminal
-サーバ環境の構築時に公開鍵をアップロードしていますので、プライベートキーを使って ssh でマスタサーバにログインします。
-
-```bash
-user@localmachine:~$ ssh -i ~/.ssh/id_rsa [マスタサーバのユーザ名]@[マスタサーバのIPアドレス]
-```
-Masterサーバからパスワードなしで各サーバへログインできるように、SSH RSAの鍵を全サーバにコピーします。
 
 ```bash
 [adminUsername@master ~]$ ./openshift-install.sh
@@ -58,16 +65,22 @@ Masterサーバからパスワードなしで各サーバへログインでき�
 
 ------
 
-### OpenShift Enterpriseのクラスタ構築 with powershell
+## OpenShift Enterpriseのクラスタ構築 with powershell
 使っていないので、オリジナル版の受け売りです。ごめんなさい。
 
 ```powershell
 New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/akubicharm/azure-openshift/wip/azuredeploy.json
 ```
 
+-------
 ## SSH Key Generation
 インストール作業をするにあたり SSH RSA の鍵の作成は下記を参照してください。
 
 1. Windows - https://www.digitalocean.com/community/tutorials/how-to-create-ssh-keys-with-putty-to-connect-to-a-vps
 2. Linux - https://help.ubuntu.com/community/SSH/OpenSSH/Keys#Generating_RSA_Keys
 3. Mac - https://help.github.com/articles/generating-ssh-keys/#platform-mac
+
+-------
+## トラブルシュート
+### デプロイ実行ログ
+`/var/log/azure` に、サーバのプロビジョニングと、拡張スクリプトの実行結果が保存されています。
