@@ -96,8 +96,6 @@ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 sudo htpasswd -cb /etc/origin/master/htpasswd joe redhat
 
 oadm policy add-role-to-user system:registry reguser
-sudo mkdir -p /registry
-sudo chown 1001:root /registry
 sudo oadm registry \
     --selector="region=infra" \
     --config=/etc/origin/master/admin.kubeconfig \
