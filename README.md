@@ -5,10 +5,10 @@
 「Deploy to Azure」をクリックすると、Azure へのデプロイを開始します。
 「Visualize」をクリックすると、インストールする構成が可視化されます。
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fakubicharm%2Fazure-openshift%2Fwip%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fakubicharm%2Fazure-openshift%2F3.1%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fakubicharm%2Fazure-openshift%2Fwip%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fakubicharm%2Fazure-openshift%2F3.1%2Fazuredeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
@@ -69,7 +69,7 @@ azuredeploy.json ファイルでは、Azure上にデプロイされたRed Hat En
 使っていないので、オリジナル版の受け売りです。ごめんなさい。
 
 ```powershell
-New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/akubicharm/azure-openshift/wip/azuredeploy.json
+New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/akubicharm/azure-openshift/3.1/azuredeploy.json
 ```
 
 -------
