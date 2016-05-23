@@ -2,6 +2,24 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "redhatUser": {
+      "type": "string",
+      "metadata": {
+        "description": "Red Hat Network username"
+      }
+    },
+    "redhatPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "Red Hat Network password"
+      }
+    },
+    "redhatPoolId": {
+      "type": "string",
+      "metadata": {
+        "description": "Subscription Manager poolID"
+      }
+    },
     "adminUsername": {
       "type": "string",
       "minLength": 1,
@@ -31,16 +49,15 @@
     "numberOfNodes": {
       "type": "int",
       "defaultValue": 3,
-      "minValue": 3,
+      "minValue": 1,
       "maxValue": 30,
       "metadata": {
         "description": "Number of Openshift Nodes to deploy (max 30)"
       }
     }
-
   },
   "variables": {
-    "baseTemplateUrl": "https://raw.githubusercontent.com/derdanu/azure-openshift/master/",
+    "baseTemplateUrl": "https://raw.githubusercontent.com/akubicharm/azure-openshift/wip/",
     "baseVMachineTemplateUriInfranode": "[concat(variables('baseTemplateUrl'), 'infranode.json')]",
     "baseVMachineTemplateUriNode": "[concat(variables('baseTemplateUrl'), 'node.json')]",
     "baseVMachineTemplateUriMaster": "[concat(variables('baseTemplateUrl'), 'master.json')]",
@@ -62,9 +79,9 @@
     "infranodeSubnetRef": "[concat(variables('vnetId'), '/subnets/', variables('infranodesubnetName'))]",
     "nodeSubnetRef": "[concat(variables('vnetId'), '/subnets/', variables('nodesubnetName'))]",
     "masterSubnetRef": "[concat(variables('vnetId'), '/subnets/', variables('mastersubnetName'))]",
-    "infranodeVMSize": "Standard_D2_v2",
-    "nodeVMSize": "Standard_D2_v2",
-    "masterVMSize": "Standard_D3_v2"
+    "infranodeVMSize": "Basic_A2",
+    "nodeVMSize": "Basic_A2",
+    "masterVMSize": "Basic_A2"
 
   },
   "resources": [
@@ -159,6 +176,15 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "redhatUser": {
+            "value": "[parameters('redhatUser')]"
+          },
+          "redhatPassword": {
+            "value": "[parameters('redhatPassword')]"
+          },
+          "redhatPoolId": {
+            "value": "[parameters('redhatPoolId')]"
+          },
           "vmName": {
             "value": "[concat('node', padLeft(add(copyindex(), 1), 2, '0'))]"
           },
@@ -199,6 +225,15 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "redhatUser": {
+            "value": "[parameters('redhatUser')]"
+          },
+          "redhatPassword": {
+            "value": "[parameters('redhatPassword')]"
+          },
+          "redhatPoolId": {
+            "value": "[parameters('redhatPoolId')]"
+          },
           "vmName": {
             "value": "master"
           },
@@ -270,6 +305,15 @@
           },
           "baseTemplateUrl": {
             "value": "[variables('baseTemplateUrl')]"
+          },
+          "redhatUser": {
+            "value": "[parameters('redhatUser')]"
+          },
+          "redhatPassword": {
+            "value": "[parameters('redhatPassword')]"
+          },
+          "redhatPoolId": {
+            "value": "[parameters('redhatPoolId')]"
           }
         }
       }
@@ -290,4 +334,3 @@
     }
   }
 }
-

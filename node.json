@@ -1,7 +1,25 @@
 ﻿{
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
+    "redhatUser": {
+      "type": "string",
+      "metadata": {
+        "description": "Red Hat Network username"
+      }
+    },
+    "redhatPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "Red Hat Network password"
+      }
+    },
+    "redhatPoolId": {
+      "type": "string",
+      "metadata": {
+        "description": "Subscription Manager poolID"
+      }
+    },
     "vmName": {
       "type": "string"
     },
@@ -29,9 +47,9 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-    "imagePublisher": "Openlogic",
-    "imageOffer": "CentOS",
-    "centOSVersion": "7.2",
+    "imagePublisher": "RedHat",
+    "imageOffer": "RHEL",
+    "rhelOSVersion": "7.2",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
 
   },
@@ -92,7 +110,7 @@
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
-            "sku": "[variables('centOSVersion')]",
+            "sku": "[variables('rhelOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
@@ -142,7 +160,7 @@
         "typeHandlerVersion": "1.3",
         "settings": {
           "fileUris": [ "[concat(parameters('baseTemplateUrl'), 'node.sh')]" ],
-          "commandToExecute": "sh node.sh"
+          "commandToExecute": "[ concat('sh node.sh ', ' ', parameters('redhatUser'), ' ', parameters('redhatPassword'), ' ', parameters('redhatPoolId') ) ]"
         }
       }
     }
